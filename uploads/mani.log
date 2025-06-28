@@ -1,0 +1,11 @@
+12:01:04 WARN CPU usage exceeded 85% on host 'webserver-02'
+2025-04-21 12:01:08 DEBUG Cache refreshed for endpoint /dashboard/stats
+2025-04-21 12:01:12 ERROR Payment processing failed: Transaction ID 9821734
+2025-04-21 12:01:16 INFO File downloaded: financial_report_2024.xlsx by user 'bob'
+2025-04-21 12:01:20 INFO User 'alice' logged out
+2025-04-21 12:01:24 DEBUG Token verified for user 'charlie'
+2025-04-21 12:01:28 ERROR Unable to connect to Redis at 127.0.0.1:6379
+2025-04-21 12:01:32 INFO Maintenance window started for database upgrade
+2025-04-21 12:01:36 INFO Maintenance window completed successfully
+2025-05-30 13:30:00 INFO Test log entry from Splunk UI
+2025-05-30 13:30:00 INFO Test log entry from Splunk UI

@@ -1,0 +1,6 @@
+Timestamp: 2025-06-26T09:35:02Z  
+Action: SELECT  
+DatabaseName: todo_db  
+PrincipalName: admin_user  
+Statement: SELECT * FROM Tasks WHERE status='pending'  
+Succeeded: True  

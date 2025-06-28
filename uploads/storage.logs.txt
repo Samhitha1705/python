@@ -1,0 +1,6 @@
+2025-06-26T09:22:12.345Z category: StorageRead
+2025-06-26T09:22:12.345Z operationName: GetBlob
+2025-06-26T09:22:12.345Z statusCode: 200
+2025-06-26T09:22:12.345Z resourceId: /subscriptions/xxxx/resourceGroups/demo-rg/providers/Microsoft.Storage/storageAccounts/demoaccount
+2025-06-26T09:22:12.345Z requester: vedasamhitha@domain.com
+2025-06-26T09:22:12.345Z uri: /demoaccount/container1/mydata.csv

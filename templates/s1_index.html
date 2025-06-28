@@ -1,0 +1,1615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Splunk App Builder</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+
+    body {
+      padding: 2rem;
+      background-color: #f8f9fa;
+      font-family: 'Segoe UI', sans-serif;
+    }
+    .form-container {
+      max-width: 750px;
+      margin: auto;
+    }
+    .card {
+      border: none;
+      border-radius: 10px;
+    }
+    .card-title {
+      font-weight: 600;
+    }
+    .form-label {
+      font-weight: 500;
+    }
+    .section-divider {
+      margin: 3rem 0 2rem;
+      text-align: center;
+      font-weight: bold;
+      font-size: 1.2rem;
+      color: #6c757d;
+    }
+    .suggestion-badge {
+      display: inline-block;
+      background-color: #e9f5ff;
+      color: #0d6efd;
+      border: 1px solid #cfe2ff;
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      margin: 3px 5px 3px 0;
+      text-decoration: none;
+      transition: background-color 0.2s ease, transform 0.2s ease;
+    }
+    .suggestion-badge:hover {
+      background-color: #d0ebff;
+      transform: scale(1.05);
+      cursor: pointer;
+    }
+    .index-option-btn {
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      margin-right: 10px;
+    }
+    .index-option-btn.active {
+      background-color: #0d6efd;
+      color: white;
+    }
+    .stepper {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+.step {
+  width: 100%;
+  text-align: center;
+  position: relative;
+  padding: 8px 0;
+  border-bottom: 2px solid #ccc;
+  color: #aaa;
+  font-weight: bold;
+}
+.step.active {
+  border-color: green;
+  color: green;
+}
+.step::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: -10px;
+  width: 20px;
+  height: 2px;
+  background-color: #ccc;
+  transform: translateY(-50%);
+}
+.step:last-child::after {
+  display: none;
+}
+.table-container {
+  max-height: 300px; /* adjust height as needed */
+  overflow-y: auto;
+  border: 1px solid #ccc;
+}
+
+.table-container thead th {
+  position: sticky;
+  top: 0;
+  background-color: white;
+  z-index: 1;
+}
+ .collapsible-header {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-weight: 500;
+    margin-bottom: 10px;
+  }
+
+  .collapsible-header::before {
+    content: "▶";
+    display: inline-block;
+    margin-right: 8px;
+    transition: transform 0.2s;
+  }
+
+  .collapsible-header.open::before {
+    transform: rotate(90deg);
+  }
+
+  .advanced-settings {
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 6px;
+    background-color: #f9f9f9;
+    margin-bottom: 15px;
+  }
+
+  .advanced-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+
+  .advanced-row input,
+  .advanced-row select {
+    flex: 1;
+  }
+
+  .remove-setting {
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: #c00;
+    cursor: pointer;
+  }
+
+  .new-setting-link {
+    color: #007bff;
+    text-decoration: underline;
+    cursor: pointer;
+    margin-top: 10px;
+    display: inline-block;
+  }
+
+
+
+
+
+
+
+   /* Google Fonts Import */
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+ 
+  /* Reset some default browser styles */
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+      Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    background: #f9fafb;
+    color: #2c3e50;
+    margin: 0;
+    padding: 0;
+  }
+ 
+ 
+  .header {
+    background: linear-gradient(90deg, #4caf50 0%, #3a944d 100%);
+    color: white;
+    padding: 28px 20px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 1.8rem;
+    letter-spacing: 0.04em;
+    box-shadow: 0 3px 8px rgb(72 180 97 / 0.4);
+  }
+  .main {
+    display: flex;
+    gap: 24px;
+    padding: 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .sidebar {
+    flex: 0 0 320px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgb(0 0 0 / 0.07);
+    padding: 24px 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .sidebar form > label {
+    font-weight: 600;
+    margin-top: 10px;
+    display: block;
+    color: #34495e;
+  }
+  .sidebar input[type="file"],
+  .sidebar input[type="text"],
+  .sidebar select,
+  .sidebar button,
+  .sidebar input[type="number"] {
+    width: 100%;
+    padding: 12px 14px;
+    margin-top: 6px;
+    border: 1.8px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.25s ease;
+    outline-offset: 2px;
+  }
+  .sidebar input[type="file"] {
+    padding: 6px 10px;
+  }
+  .sidebar input[type="text"]:focus,
+  .sidebar select:focus,
+  .sidebar input[type="number"]:focus {
+    border-color: #4caf50;
+    box-shadow: 0 0 8px rgb(76 175 80 / 0.4);
+  }
+  .sidebar button {
+    background: #4caf50;
+    border: none;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 16px;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    padding: 14px 0;
+    box-shadow: 0 4px 12px rgb(76 175 80 / 0.4);
+    user-select: none;
+    transition: background-color 0.3s ease;
+  }
+  .sidebar button:hover {
+    background-color: #3a944d;
+    box-shadow: 0 6px 16px rgb(58 148 77 / 0.6);
+  }
+  .sidebar button[type="button"] {
+    background: #e0e7ff;
+    color: #3730a3;
+    font-weight: 600;
+    box-shadow: none;
+    margin-top: 0;
+  }
+  .sidebar button[type="button"]:hover {
+    background: #c7d2fe;
+  }
+  small {
+    font-size: 12px;
+    color: #64748b;
+    margin-top: 4px;
+    display: block;
+  }
+  code {
+    background: #f3f4f6;
+    padding: 2px 5px;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+  }
+ 
+  /* Radio Button Styling */
+  .sidebar label input[type="radio"] {
+    margin-right: 10px;
+    cursor: pointer;
+  }
+  .sidebar label {
+    cursor: pointer;
+    font-weight: 500;
+    color: #374151;
+  }
+ 
+  /* Advanced Settings */
+  #advanced-settings {
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1.5px solid #e5e7eb;
+  }
+  .name-value-pair {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+  .name-value-pair input[type="text"],
+  .name-value-pair select {
+    flex: 1;
+    padding: 10px 12px;
+    border-radius: 6px;
+    border: 1.5px solid #cbd5e1;
+    font-size: 0.95rem;
+    transition: border-color 0.3s ease;
+  }
+  .name-value-pair input[type="text"]:focus,
+  .name-value-pair select:focus {
+    border-color: #4caf50;
+    box-shadow: 0 0 7px rgb(76 175 80 / 0.3);
+    outline: none;
+  }
+  .remove-pair {
+    font-size: 20px;
+    color: #e53e3e;
+    cursor: pointer;
+    user-select: none;
+    font-weight: 700;
+    transition: color 0.2s ease;
+  }
+  .remove-pair:hover {
+    color: #9b2c2c;
+  }
+ 
+  /* Content area */
+  .content {
+    flex: 1;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgb(0 0 0 / 0.06);
+    padding: 28px 32px;
+    overflow-x: auto;
+  }
+  .content h2 {
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 24px;
+    font-size: 1.6rem;
+    border-bottom: 2px solid #4caf50;
+    padding-bottom: 8px;
+  }
+  textarea {
+    width: 100%;
+    height: 320px;
+    padding: 16px;
+    border-radius: 10px;
+    border: 1.5px solid #d1d5db;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    color: #1e293b;
+    background: #f9fafb;
+    resize: vertical;
+    transition: border-color 0.3s ease;
+  }
+  textarea:focus {
+    border-color: #4caf50;
+    box-shadow: 0 0 10px rgb(76 175 80 / 0.4);
+    outline: none;
+  }
+ 
+  /* Table Styling */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 8px;
+    font-size: 0.95rem;
+    color: #374151;
+    box-shadow: 0 3px 10px rgb(0 0 0 / 0.05);
+  }
+  th, td {
+    padding: 12px 14px;
+    border-bottom: 1px solid #e5e7eb;
+    text-align: left;
+  }
+  th {
+    background-color: #e8f5e9;
+    color: #276749;
+    font-weight: 700;
+    border-bottom: 2px solid #4caf50;
+  }
+  tr:hover {
+    background-color: #f0fff4;
+  }
+ 
+  /* Responsive for smaller screens */
+  @media (max-width: 900px) {
+    .main {
+      flex-direction: column;
+      padding: 16px;
+    }
+    .sidebar {
+      width: 100%;
+      margin-bottom: 20px;
+    }
+    .content {
+      width: 100%;
+    }
+  }
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.43/moment-timezone-with-data.min.js"></script>
+
+</head>
+<body>
+
+<div class="container">
+  <h1 class="text-center mb-5 text-primary">Splunk App Builder</h1>
+
+  <div class="card shadow-sm mb-5 form-container">
+    <div class="card-body">
+      <h4 class="card-title mb-3">Create a New Splunk App</h4>
+      <form action="/create_app" method="POST" enctype="multipart/form-data" novalidate>
+
+        <!-- App Name -->
+        <div class="mb-3">
+          <label class="form-label">App Name</label>
+          <input type="text" name="app_name" class="form-control" id="appNameInput" placeholder="Enter App Name" required>
+          <div id="appNameSuggestions" class="mt-2"></div>
+        </div>
+
+        <!-- Index Selection -->
+        <div class="mb-3">
+          <label class="form-label">Index Setup</label><br>
+          <button type="button" class="btn btn-outline-primary index-option-btn" id="btnUseExisting">Use Existing Index</button>
+          <button type="button" class="btn btn-outline-secondary index-option-btn" id="btnCreateNew">Create New Index</button>
+        </div>
+
+        <div class="mb-3" id="dropdownSection" style="display: none;">
+          <label class="form-label">Select Existing Index</label>
+          <select name="index_name" class="form-select" id="indexNameSelect">
+            <option value="" disabled selected>Loading indexes...</option>
+          </select>
+        </div>
+
+         <div id="createNewSection" class="mb-3" style="display: none;">
+          <label for="newIndexName" class="form-label">New Index Name</label>
+          <input type="text" class="form-control" id="newIndexName" name="new_index_name" placeholder="Enter new index name">
+          <div id="indexSuggestions" class="mt-2"></div>
+        </div>
+
+        <!-- Config File Selection -->
+        <div class="mb-4">
+          <label class="form-label">Select Configuration Files to Generate</label><br>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input config-toggle" type="checkbox" id="inputsConf" name ="inputs" value="on">
+            <label class="form-check-label" for="inputsConf">inputs.conf</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input config-toggle" type="checkbox" id="propsConf" name="props" value="on">
+            <label class="form-check-label" for="propsConf">props.conf</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input config-toggle" type="checkbox" id="appConf" name="app" value="on">
+            <label class="form-check-label" for="appConf">app.conf</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input config-toggle" type="checkbox" id="transformConf" name="app" value="on">
+            <label class="form-check-label" for="transformConf">transform.conf</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input config-toggle" type="checkbox" id="outputsConf" name="outputs" value="on">
+            <label class="form-check-label" for="outputsConf">outputs.conf</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input config-toggle" type="checkbox" id="defaultConf" name="defaults" value="on">
+            <label class="form-check-label" for="defaultConf">default.conf</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input config-toggle" type="checkbox" id="props1conf" name ="inputs" value="on">
+            <label class="form-check-label" for="props1conf">props1.conf</label>
+          </div>
+             <div class="form-check form-check-inline">
+            <input class="form-check-input config-toggle" type="checkbox" id="propsgen" name ="inputs" value="on">
+            <label class="form-check-label" for="propsgen">propsgeneration</label>
+          </div>
+        </div>
+
+        <!-- Config Field Sections -->
+        <div id="inputsConfFields" class="mb-3" style="display: none;">
+            <h5>inputs.conf Fields</h5>
+              <div class="form-check form-check-inline mb-2">
+                <input class="form-check-input" type="radio" name="inputs_entry_mode" id="manualEntry" value="manual" checked>
+                <label class="form-check-label" for="manualEntry">Manual Entry</label>
+              </div>
+              <div class="form-check form-check-inline mb-2">
+                <input class="form-check-input" type="radio" name="inputs_entry_mode" id="fileUpload" value="file">
+                <label class="form-check-label" for="fileUpload">Upload Excel/CSV</label>
+              </div>
+              <div id="manualInputsSection">
+                  <input type="text" name="source1_config_type" class="form-control mb-2" value="inputs" readonly>
+                  <input type="text" name="source1_stanza_type" class="form-control mb-2" value="monitor" readonly>
+                  <input type="text" name="source1_stanza_value" class="form-control mb-2" placeholder="Log File Path e.g., /var/log/app/access.log">
+                  <input type="text" name="source1_ip_value" class="form-control mb-2" placeholder="IP Address e.g., 192.168.1.10">
+                  <input type="text" name="source1_log_path" class="form-control mb-2" placeholder="Log Path e.g., /var/log/app/">
+                  <input type="text" name="source1_log_file" class="form-control mb-2" placeholder="Log File e.g., access.log">
+                  <input type="text" name="source1_source_type" class="form-control mb-2" placeholder="Sourcetype e.g., access_combined">
+                  <input type="text" name="source1_index_name" class="form-control mb-2" placeholder="Index Name e.g., app_logs">
+              </div>
+              <div id="fileUploadSection" style="display: none;">
+                <label for="fileUploadInput" class="form-label">Upload Excel/CSV File</label>
+                <input type="file" id="fileUploadInput" name="inputs_file_upload" accept=".csv,.xlsx" class="form-control mb-2">
+              </div>
+        </div>
+
+        <div id="defaultConfFields" class="mb-3" style="display: none;">
+          <h5>default.conf Fields</h5>
+          <input type="text" name="default_author" class="form-control mb-2" placeholder="Author">
+          <input type="text" name="default_description" class="form-control mb-2" placeholder="App Description">
+          <input type="text" name="default_version" class="form-control mb-2" placeholder="App Version">
+          <input type="text" name="default_index" class="form-control mb-2" placeholder="Default Index Name">
+        </div>
+
+        <div id="outputsConfFields" class="mb-3" style="display: none;">
+          <h5>Outputs.conf Fields</h5>
+          <input type="text" name="outputs_indexer_ip" class="form-control mb-2" placeholder="Indexer IP e.g., 192.168.1.100">
+          <input type="text" name="outputs_port" class="form-control mb-2" placeholder="Port e.g., 9997">
+        </div>
+
+        <div id="propsConfFields" class="mb-4" style="display: none;">
+          <h5>props.conf Log Upload</h5>
+
+          <!-- Step Progress Bar -->
+          <div class="stepper mb-4">
+            <div class="step active" id="progress-step-1">Upload</div>
+            <div class="step" id="progress-step-2">Preview Logs</div>
+          </div>
+
+          <!-- Step 1: File Upload -->
+          <div class="step-content" id="step-1">
+            <label>Upload .log File:</label>
+            <input type="file" name="props_file_upload" id="logFileInput" accept=".log" class="form-control mb-3" />
+            <button type="button" class="btn btn-success" onclick="nextStep()">Next</button>
+          </div>
+        
+          <!-- Step 2: Show Log Content -->
+          <!-- Step 2: Show Log Content in Table -->
+        <!-- Step 2: Show Log Content in Table -->
+          <div class="step-content" id="step-2" style="display: none;">
+            <label>📄 Preview Log File Content:</label>
+          <div class="table-container">
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Time</th>
+                    <th>Level</th>
+                    <th>Message</th>
+                  </tr>
+                </thead>
+                <tbody id="logTableBody">
+                  <!-- Rows inserted dynamically -->
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Timestamp Settings Section -->
+            <div class="card p-3 mb-3">
+              <!-- Header with toggle -->
+              <div class="d-flex align-items-center justify-content-between" style="cursor: pointer;" data-bs-toggle="collapse" data-bs-target="#timestampSettings" aria-expanded="false" aria-controls="timestampSettings">
+                <div class="d-flex align-items-center">
+                  <span class="me-2 toggle-icon" id="toggleArrow">&#9654;</span> <!-- ▶ -->
+                  <h5 class="mb-0">Timestamp</h5>
+                </div>
+              </div>
+
+              <!-- Collapsible body -->
+              <div class="collapse mt-3" id="timestampSettings">
+                <p class="mb-2 text-muted">Determine how timestamps for the incoming data are defined.</p>
+                <div class="btn-group mb-3" role="group" aria-label="Timestamp Mode" id="timestampModeGroup">
+                  <input type="radio" class="btn-check" name="timestampMode" id="autoMode" autocomplete="off">
+                  <label class="btn btn-outline-primary" for="autoMode" onclick="setTimestampModes('auto', event)">Auto</label>
+
+                  <input type="radio" class="btn-check" name="timestampMode" id="currentMode" autocomplete="off">
+                  <label class="btn btn-outline-primary" for="currentMode" onclick="applyCurrentTime(event)">Current</label>
+
+                  <input type="radio" class="btn-check" name="timestampMode" id="advancedMode" autocomplete="off">
+                  <label class="btn btn-outline-primary" for="advancedMode" onclick="setTimestampMode('advanced', event)">Advanced</label>
+                </div>
+
+                <div id="advanced-timestamp-settings" style="display: none;">
+                  <div class="form-group mb-3">
+                    <label for="timezone">Time zone</label>
+                    <select class="form-control" id="timezone" onchange="applyTimezoneToLogs()">
+                      <option selected>-- Default System Timezone --</option>
+                      <option value="UTC">UTC</option>
+                      <option value="Asia/Kolkata">Asia/Kolkata</option>
+                      <option value="America/New_York">America/New_York</option>
+                      <option value="Europe/London">Europe/London</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group mb-3">
+                    <label>Timestamp Format</label>
+                    <input type="text" class="form-control" placeholder="%Y-%m-%d %H:%M:%S" />
+                  </div>
+
+                  <div class="form-group mb-3">
+                    <label>Timestamp Prefix</label>
+                    <input type="text" class="form-control" placeholder="e.g. \\d{4}-\\d{2}-\\d{2}" />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="advanced-settings">
+            <div class="collapsible-header" onclick="toggleAdvancedSection(this)">
+              Advanced
+            </div>
+
+            <div class="collapsible-body" style="display: none;" id="advancedConfigList">
+              <div class="advanced-row">
+                <input type="text" class="form-control" value="CHARSET" readonly>
+                <select class="form-control">
+                  <option selected disabled>Select…</option>
+                  <option>UTF-8</option>
+                  <option>ISO-8859-1</option>
+                </select>
+                <button class="remove-setting" onclick="removeSetting(this)">×</button>
+              </div>
+
+              <div class="advanced-row">
+                <input type="text" class="form-control" value="DATETIME_CONFIG" readonly>
+                <input type="text" class="form-control" value="">
+                <button class="remove-setting" onclick="removeSetting(this)">×</button>
+              </div>
+
+              <div class="advanced-row">
+                <input type="text" class="form-control" value="SHOULD_LINEMERGE" readonly>
+                <input type="text" class="form-control" value="false">
+                <button class="remove-setting" onclick="removeSetting(this)">×</button>
+              </div>
+
+              <div class="advanced-row">
+                <input type="text" class="form-control" value="LINE_BREAKER" readonly>
+                <input type="text" class="form-control" value="([\r\n]+)">
+                <button class="remove-setting" onclick="removeSetting(this)">×</button>
+              </div>
+
+              <div class="advanced-row">
+                <input type="text" class="form-control" value="NO_BINARY_CHECK" readonly>
+                <input type="text" class="form-control" value="true">
+                <button class="remove-setting" onclick="removeSetting(this)">×</button>
+              </div>
+              <span class="new-setting-link" onclick="addNewSetting()">New setting</span>
+              <div class="d-flex justify-content-between align-items-center mt-3">
+                <div>
+                  <span class="new-setting-link" onclick="copyToClipboard()">Copy to clipboard</span>
+                </div>
+                <button type="button" class="btn btn-outline-secondary btn-sm" onclick="applyAdvancedSettings()">Apply settings</button>
+              </div>
+
+            </div>
+          </div>
+
+            <button type="button" class="btn btn-secondary" onclick="prevStep()">Back</button>
+            <button type="button" class="btn btn-success" onclick="nextStep()">Next</button>
+          </div>
+          </div>
+        </div>  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+
+        <div id="transformsConfFields" class="mb-3" style="display: none;">
+          <h5>Transforms.conf Fields</h5>
+          <input type="text" name="transforms_stanza" class="form-control mb-2" placeholder="Stanza Name e.g., null_queue_transform">
+          <input type="text" name="transforms_key" class="form-control mb-2" placeholder="Key (comma-separated) e.g., REGEX, DEST_KEY, FORMAT">
+          <input type="text" name="transforms_value" class="form-control mb-2" placeholder="Value (comma-separated) e.g., .*error.*, queue, nullQueue">
+        </div>
+
+ 
+        <div id="appConfFields" class="mb-3" style="display: none;">
+          <h5>App.conf Fields</h5>
+          <input type="text" name="app_label" class="form-control mb-2" placeholder="App Label (Display Name)">
+          <input type="text" name="app_author" class="form-control mb-2" placeholder="Author">
+          <input type="text" name="app_description" class="form-control mb-2" placeholder="Description">
+        </div>
+
+        <!-- ME Count -->
+        <div class="mb-3"  id="meCountSelect" name="me_count" class="form-select">
+         
+        </div>
+
+        <!-- ME Input Fields -->
+        <div id="manualMeFieldsContainer"></div>
+
+        <!-- File Upload Section -->
+        <!-- <div id="meFileUploadSection" style="display: none;">
+          <label class="form-label">Upload Excel or CSV with Data</label>
+          <input type="file" name="me_file_upload" class="form-control" accept=".csv, .xlsx, .xls">
+          <p class="text-muted mt-2">Ensure your file includes the following columns:</p>
+          <ul class="small">
+            <li><strong>config_type</strong>: The type of configuration file (e.g., <code>inputs</code>, <code>outputs</code>, <code>server</code>)</li>
+            <li><strong>stanza_type</strong>: The type of stanza (e.g., <code>monitor</code>, <code>tcpout</code>)</li>
+            <li><strong>stanza_value</strong>: The value associated with the stanza (e.g., <code>/var/log/*.log</code>, or leave it empty if not applicable)</li>
+            <li><strong>key</strong>: The configuration parameter name (e.g., <code>host</code>, <code>index</code>, etc.)</li>
+            <li><strong>value</strong>: The value for the configuration parameter (this can be a single value or comma-separated if it allows multiple values, like <code>source1, source2</code>)</li>
+            <li><strong>IP Address</strong>: A special key-value pair where the key is fixed as <code>ip_address</code> and the value is the IP of the source machine (e.g., <code>192.168.1.10</code>)</li>
+            <li><strong>Log Path</strong>: The directory path of the logs you want to monitor (e.g., <code>/var/log/app/</code>)</li>
+            <li><strong>Log File Name</strong>: The specific name of the log file within the path (e.g., <code>access.log</code>)</li>
+            <li><strong>Source Type</strong>: The source type associated with the data for Splunk (e.g., <code>access_combined</code>)</li>
+            <li><strong>Index Name</strong>: The name of the Splunk index where the data should be stored (e.g., <code>app_logs</code>)</li>
+          </ul>
+        </div> -->
+
+        <button type="submit" class="btn btn-primary w-100 mt-3">Create App</button>
+      </form>
+ 
+  
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+    
+<div class="header" class="md=3" >
+  Props Generator
+
+  <!-- Copy Panel (unchanged)   id="props_uiconf" -->
+  <div id="copy-panel" style="display:none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; border: 1.5px solid #4caf50; border-radius: 10px; padding: 16px; width: 320px; box-shadow: 0 4px 14px rgba(76,175,80,0.3); font-family: monospace; z-index: 1000;">
+    <h3 style="margin-top:0; font-weight: 600; color: #276749;">Props Configuration</h3>
+    <textarea id="copy-textarea" rows="8" style="width: 100%; padding: 10px; font-size: 0.9rem; border: 1px solid #cbd5e1; border-radius: 6px; resize: vertical;"></textarea>
+    <div style="margin-top: 12px; text-align: right;">
+      <button id="copy-confirm" style="background:#4caf50; border:none; color:white; padding:8px 14px; border-radius:6px; cursor:pointer; margin-right: 8px;">Copy</button>
+      <button id="copy-cancel" style="background:#f3f4f6; border:none; color:#374151; padding:8px 14px; border-radius:6px; cursor:pointer;">Cancel</button>
+    </div>
+    <div id="copy-status" style="margin-top:8px; color:#276749; font-weight: 600; display:none;">Copied!</div>
+  </div>
+
+  <div class="main" >
+    <aside class="sidebar">
+      <form id="propsForm" method="POST" enctype="multipart/form-data" novalidate>
+        <label for="file"><strong>Upload Log File</strong></label>
+        <input type="file" id="file" name="file" accept=".log,.txt">
+        <div id="filename-display" style="margin-top: 8px; font-style: italic; color: #555;"></div>
+
+        <label><strong>Event Policy</strong></label>
+        <label><input type="radio" name="event_policy" value="auto" {{ 'checked' if event_policy=='auto' else '' }}> Auto</label>
+        <label><input type="radio" name="event_policy" value="every_line" {{ 'checked' if event_policy=='every_line' else '' }}> Every Line</label>
+   <label><input type="radio" name="event_policy" value="regex" {{ 'checked' if event_policy=='regex' else '' }}> Regex</label>
+
+<!-- Wrap regex pattern input in a div for toggling -->
+<div id="regex-pattern-container" style="display: {% if event_policy == 'regex' %}block{% else %}none{% endif %}; margin-top: 8px;">
+  <label for="regex_pattern">Regex Pattern</label>
+  <input type="text" id="regex_pattern" name="regex_pattern" value="{{ regex_pattern }}" placeholder="Enter regex pattern">
+</div>
+
+
+
+<label><strong>Timestamp Extraction</strong></label>
+<label><input type="radio" name="timestamp_policy" value="auto" {{ 'checked' if timestamp_policy=='auto' else '' }}> Auto</label>
+<label><input type="radio" name="timestamp_policy" value="current_time" {{ 'checked' if timestamp_policy=='current_time' else '' }}> Current Time</label>
+<label><input type="radio" name="timestamp_policy" value="advanced" {{ 'checked' if timestamp_policy=='advanced' else '' }}> Advanced</label>
+
+<!-- Wrap the advanced options in a div to toggle visibility -->
+<div id="advanced-options" style="display: {% if timestamp_policy == 'advanced' %}block{% else %}none{% endif %}; margin-top: 12px;">
+
+  <label for="timezone_select"><strong>Time Zone</strong></label>
+  <select name="timezone_select" id="timezone_select">
+    {% for tz_val, tz_desc in timezone_options %}
+    <option value="{{ tz_val }}" {{ 'selected' if tz_val == selected_timezone else '' }}>{{ tz_desc }}</option>
+    {% endfor %}
+  </select>
+
+  <label for="timestamp_format"><strong>Timestamp Format</strong></label>
+  <input type="text" id="timestamp_format" name="timestamp_format" placeholder="e.g. %Y-%m-%d %H:%M:%S" value="{{ timestamp_format or '' }}">
+  <small>A string in <code>strptime()</code> format that helps Splunk recognize timestamps. <a href="https://docs.python.org/3/library/datetime.html#strftime-and-strptime-format-codes" target="_blank" rel="noopener">Learn More</a></small>
+
+  <label for="timestamp_prefix"><strong>Timestamp Prefix</strong></label>
+  <input type="text" id="timestamp_prefix" name="timestamp_prefix" placeholder="Regex pattern e.g. \\d+abc123\\d{2,4}" value="{{ timestamp_prefix or '' }}">
+  <small>Timestamp is always prefaced by this regex pattern.</small>
+
+  <label for="lookahead"><strong>Lookahead</strong></label>
+  <input type="number" id="lookahead" name="lookahead" min="0" placeholder="128" value="{{ lookahead or 128 }}">
+  <small>Timestamp never extends more than this number of characters into the event, or past the Regex if specified above.</small>
+
+</div>
+
+
+
+        <div style="margin-top:15px;">
+          <button type="button" onclick="toggleAdvancedSettings()">⚙️ Advanced Settings</button>
+        </div>
+
+        <!-- Advanced Name-Value Pairs -->
+        <div id="advanced-settings" style="display:none; margin-top: 15px;">
+          <h3 style="color:#4caf50; font-weight: 700;">Advanced Name-Value Pairs</h3>
+          <div id="name-value-container">
+            {% for idx, pair in enumerate(name_value_pairs) %}
+              {% if timestamp_policy == 'advanced' %}
+                <div class="name-value-pair">
+                  <input type="text" name="name_{{ idx }}" value="{{ pair[0] }}" class="name-input" required>
+                  {% if pair[0] == "CHARSET" %}
+                  <select name="value_{{ idx }}">
+                    {% for cset in charset_options %}
+                    <option value="{{ cset }}" {{ 'selected' if cset==pair[1] else '' }}>{{ cset }}</option>
+                    {% endfor %}
+                  </select>
+                  {% else %}
+                  <input type="text" name="value_{{ idx }}" value="{{ pair[1] }}" class="value-input">
+                  {% endif %}
+                  <span class="remove-pair" onclick="removeNameValuePair(this)" title="Remove pair">×</span>
+                </div>
+              {% else %}
+                {% if pair[0] not in ['TIME_FORMAT', 'TIME_PREFIX', 'MAX_TIMESTAMP_LOOKAHEAD', 'TIMEZONE'] %}
+                  <div class="name-value-pair">
+                    <input type="text" name="name_{{ idx }}" value="{{ pair[0] }}" class="name-input" required>
+                    {% if pair[0] == "CHARSET" %}
+                    <select name="value_{{ idx }}">
+                      {% for cset in charset_options %}
+                      <option value="{{ cset }}" {{ 'selected' if cset==pair[1] else '' }}>{{ cset }}</option>
+                      {% endfor %}
+                    </select>
+                    {% else %}
+                    <input type="text" name="value_{{ idx }}" value="{{ pair[1] }}" class="value-input">
+                    {% endif %}
+                    <span class="remove-pair" onclick="removeNameValuePair(this)" title="Remove pair">×</span>
+                  </div>
+                {% endif %}
+              {% endif %}
+            {% endfor %}
+          </div>
+          <button type="button" onclick="addNameValuePair()">Add Pair</button>
+          <button type="button" onclick="showCopyPanel()">Copy to Clipboard</button>
+        </div>
+
+        <!-- Remove other submit buttons; only Parse button remains -->
+        <button type="button" id="parseBtn" style="margin-top: 24px;">Parse</button>
+      </form>
+    </aside>
+
+    <section class="content">
+      <h2>{{ uploaded_filename or "No file uploaded" }}</h2>
+
+      {% if not uploaded_filename %}
+      <!-- Show SVG and message if no file uploaded -->
+      <div style="text-align:center; padding: 40px 20px; color: #6b7280;">
+        <svg width="150" height="150" viewBox="0 0 24 24" fill="none" stroke="#4caf50" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 16px;">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+          <polyline points="7 10 12 15 17 10" />
+          <line x1="12" y1="15" x2="12" y2="3" />
+        </svg>
+        <p style="font-size: 1.2rem;">No log file uploaded yet. Please upload a file to get started.</p>
+      </div>
+
+      {% elif event_policy == 'auto' %}
+      <textarea readonly>{{ combined_log }}</textarea>
+
+      {% else %}
+      <table>
+        <thead>
+          <tr>
+            <th>Timestamp</th>
+            <th>Log Line</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in table_data %}
+          <tr>
+            <td>{{ row.datetime }}</td>
+            <td>{{ row.log }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% endif %}
+    </section>
+
+  </div>
+</div>
+
+ 
+
+   </div>
+
+ 
+  </div>
+
+
+<div class="section-divider">OR</div>
+  <!-- Upload ZIP App -->
+  <div class="card shadow-sm form-container">
+    <div class="card-body">
+      <h4 class="card-title mb-3">Upload Existing App (.zip)</h4>
+      <form action="/upload_zip" method="POST" enctype="multipart/form-data">
+        <div class="mb-3">
+          <input type="file" name="zip_file" class="form-control" accept=".zip" required>
+        </div>
+        <button type="submit" class="btn btn-success w-100">Upload App</button>
+      </form>
+    </div>
+  </div>
+</div>
+<script>
+  const copyPanel = document.getElementById('copy-panel');
+  const copyTextarea = document.getElementById('copy-textarea');
+  const copyStatus = document.getElementById('copy-status');
+  const copyConfirm = document.getElementById('copy-confirm');
+  const copyCancel = document.getElementById('copy-cancel');
+ 
+  // Show the copy panel with the current name-value pairs text
+  function showCopyPanel() {
+    let text = "";
+    const pairs = document.querySelectorAll(".name-value-pair");
+    pairs.forEach(pair => {
+      const nameInput = pair.querySelector("input[name^='name_']");
+      const valueInput = pair.querySelector("input[name^='value_'], select[name^='value_']");
+      const name = nameInput ? nameInput.value.trim() : "";
+      const value = valueInput ? valueInput.value.trim() : "";
+      if (name && value) {
+        text += `${name}=${value}\n`;
+      }
+    });
+    if (!text) {
+      alert("No name-value pairs to copy.");
+      return;
+    }
+    copyTextarea.value = text.trim();
+    copyStatus.style.display = 'none';
+    copyPanel.style.display = 'block';
+  }
+ 
+  // Copy the textarea content and show success
+  copyConfirm.addEventListener('click', () => {
+    navigator.clipboard.writeText(copyTextarea.value).then(() => {
+      copyStatus.style.display = 'block';
+      // Optionally disable the copy button after success
+      copyConfirm.disabled = true;
+      setTimeout(() => {
+        copyStatus.style.display = 'none';
+        copyPanel.style.display = 'none';
+        copyConfirm.disabled = false;
+      }, 2000);
+    }).catch(err => {
+      alert("Failed to copy: " + err);
+    });
+  });
+ 
+  // Cancel hides the panel
+  copyCancel.addEventListener('click', () => {
+    copyPanel.style.display = 'none';
+  });
+</script>
+ 
+<!-- JavaScript -->
+ <script>
+  function toggleRegexPattern() {
+    const regexRadio = document.querySelector('input[name="event_policy"][value="regex"]');
+    const regexContainer = document.getElementById('regex-pattern-container');
+    if (regexRadio.checked) {
+      regexContainer.style.display = 'block';
+    } else {
+      regexContainer.style.display = 'none';
+    }
+  }
+
+  window.addEventListener('DOMContentLoaded', toggleRegexPattern);
+
+  document.querySelectorAll('input[name="event_policy"]').forEach(radio => {
+    radio.addEventListener('change', toggleRegexPattern);
+  });
+    const fileInput = document.getElementById('file');
+  const filenameDisplay = document.getElementById('filename-display');
+
+  fileInput.addEventListener('change', () => {
+    if (fileInput.files.length > 0) {
+      filenameDisplay.textContent = `Selected file: ${fileInput.files[0].name}`;
+    } else {
+      filenameDisplay.textContent = '';
+    }
+  });
+</script>
+<script>
+  function toggleAdvancedOptions() {
+    const advancedRadio = document.querySelector('input[name="timestamp_policy"][value="advanced"]');
+    const advOptionsDiv = document.getElementById('advanced-options');
+    if (advancedRadio.checked) {
+      advOptionsDiv.style.display = 'block';
+    } else {
+      advOptionsDiv.style.display = 'none';
+    }
+  }
+
+  // Run on page load to set initial visibility correctly
+  window.addEventListener('DOMContentLoaded', toggleAdvancedOptions);
+
+  // Add change listeners to all timestamp_policy radios
+  document.querySelectorAll('input[name="timestamp_policy"]').forEach(radio => {
+    radio.addEventListener('change', toggleAdvancedOptions);
+  });
+</script>
+<script>
+  const appNameInput = document.getElementById('appNameInput');
+  const appNameSuggestions = document.getElementById('appNameSuggestions');
+  const indexSuggestions = document.getElementById('indexSuggestions');
+  const appSuffixes = ["logs", "events", "data", "metrics", "audit", "svc"];
+
+  appNameInput.addEventListener('input', () => {
+    const name = appNameInput.value.trim().toLowerCase().replace(/[^a-z0-9_]/g, '');
+    if (name) {
+      const suggestions = appSuffixes.slice(0, 5).map(s => `${name}_${s}`);
+      appNameSuggestions.innerHTML = "Suggestions: " + suggestions.map(s =>
+        `<a href="#" class="suggestion-badge" onclick="event.preventDefault(); appNameInput.value='${s}'">${s}</a>`
+      ).join(''); 
+      indexSuggestions.innerHTML = "Index Suggestions: " + suggestions.map(s =>
+        `<a href="#" class="suggestion-badge" onclick="event.preventDefault(); document.getElementById('newIndexName').value='${s}'">${s}</a>`
+      ).join(''); 
+    } else {
+      appNameSuggestions.innerHTML = '';
+      indexSuggestions.innerHTML = '';
+    }
+  });
+
+  const btnUseExisting = document.getElementById('btnUseExisting');
+  const btnCreateNew = document.getElementById('btnCreateNew');
+  const dropdownSection = document.getElementById('dropdownSection');
+  const createNewSection = document.getElementById('createNewSection');
+  const indexSelect = document.getElementById('indexNameSelect');
+  const newIndexInput = document.getElementById('newIndexName');
+
+  btnUseExisting.addEventListener('click', () => {
+    btnUseExisting.classList.add('active');
+    btnCreateNew.classList.remove('active');
+    dropdownSection.style.display = 'block';
+    createNewSection.style.display = 'none';
+    indexSelect.required = true;
+    newIndexInput.required = false;
+
+    fetch('/splunk_indexes')
+      .then(response => response.json())
+      .then(data => {
+        indexSelect.innerHTML = '<option value="" disabled selected>Select index</option>';
+        data.forEach(name => {
+          const opt = document.createElement('option');
+          opt.value = name;
+          opt.textContent = name;
+          indexSelect.appendChild(opt);
+        });
+      });
+  });
+
+  btnCreateNew.addEventListener('click', () => {
+    btnCreateNew.classList.add('active');
+    btnUseExisting.classList.remove('active');
+    dropdownSection.style.display = 'none';
+    createNewSection.style.display = 'block';
+    indexSelect.required = false;
+    newIndexInput.required = true;
+  });
+
+  const meCountSelect = document.getElementById('meCountSelect');
+  const manualMeFieldsContainer = document.getElementById('manualMeFieldsContainer');
+  const meFileUploadSection = document.getElementById('meFileUploadSection');
+
+  meCountSelect.addEventListener('change', () => {
+    const value = meCountSelect.value;
+    manualMeFieldsContainer.innerHTML = '';
+    meFileUploadSection.style.display = value === 'more' ? 'block' : 'none';
+
+    if (value !== 'more') {
+      for (let i = 1; i <= parseInt(value); i++) {
+        manualMeFieldsContainer.innerHTML += `
+         <div class="mb-3">
+          <h6 class="fw-bold">Source ${i}</h6>
+
+          <!-- Configuration Type -->
+          <input type="text" name="source${i}_config_type" class="form-control mb-2" placeholder="Config Type (e.g., inputs, outputs)" required>
+
+          <!-- Stanza Type -->
+          <input type="text" name="source${i}_stanza_type" class="form-control mb-2" placeholder="Stanza Type (e.g., monitor, tcpout)" required>
+
+          <!-- Stanza Value -->
+          <input type="text" name="source${i}_stanza_value" class="form-control mb-2" placeholder="Stanza Value (e.g., /var/log/*.log)" required>
+
+          <!-- Key -->
+          <input type="text" name="source${i}_key" class="form-control mb-2" placeholder="Key (e.g., host, index)" required>
+
+          <!-- Value -->
+          <input type="text" name="source${i}_value" class="form-control mb-2" placeholder="Value (e.g., source1, source2)" required>
+
+          <!-- IP Address (Key fixed, value user input) -->
+          
+          <input type="text" name="source${i}_ip_key" class="form-control mb-2" value="ip_address" readonly>
+          <input type="text" name="source${i}_ip_value" class="form-control mb-2" placeholder="Enter IP Address (e.g., 192.168.1.100)">
+
+          <!-- Log Path -->
+          <input type="text" name="source${i}_log_path" class="form-control mb-2" placeholder="Log Path (e.g., /var/log/app/)">
+
+          <!-- Log File Name -->
+          <input type="text" name="source${i}_log_file" class="form-control mb-2" placeholder="Log File Name (e.g., access.log)">
+
+          <!-- Source Type -->
+          <input type="text" name="source${i}_source_type" class="form-control mb-2" placeholder="Source Type (e.g., access_combined)">
+
+          <!-- Index Name -->
+          <input type="text" name="source${i}_index_name" class="form-control mb-2" placeholder="Index Name (e.g., app_logs)">
+
+          <!-- Optional Created Time -->
+          <input type="text" name="source${i}_created_time" class="form-control" placeholder="Created Time (optional)">
+        </div>
+
+        `;
+      }
+    }
+  });
+  document.querySelectorAll('.config-toggle').forEach(checkbox => {
+  checkbox.addEventListener('change', () => {
+    document.getElementById('inputsConfFields').style.display = document.getElementById('inputsConf').checked ? 'block' : 'none';
+    document.getElementById('propsConfFields').style.display = document.getElementById('propsConf').checked ? 'block' : 'none';
+    document.getElementById('outputsConfFields').style.display = document.getElementById('outputsConf').checked ? 'block' : 'none';
+    document.getElementById('appConfFields').style.display = document.getElementById('appConf').checked ? 'block' : 'none';
+    document.getElementById('transformsConfFields').style.display = document.getElementById('transformConf').checked ? 'block' : 'none';
+    document.getElementById('defaultConfFields').style.display = document.getElementById('defaultConf').checked ? 'block' : 'none';
+    document.getElementById('props_uiconf').style.display =document.getElementById('props1conf').checked?'block':'none';
+ document.getElementById('propsgenui').style.display =document.getElementById('propsgen').checked?'block':'none';
+
+  });
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+    const manualRadio = document.getElementById("manualEntry");
+    const fileRadio = document.getElementById("fileUpload");
+    const manualSection = document.getElementById("manualInputsSection");
+    const fileSection = document.getElementById("fileUploadSection");
+
+    manualRadio.addEventListener("change", () => {
+      if (manualRadio.checked) {
+        manualSection.style.display = "block";
+        fileSection.style.display = "none";
+      }
+    });
+
+    fileRadio.addEventListener("change", () => {
+      if (fileRadio.checked) {
+        manualSection.style.display = "none";
+        fileSection.style.display = "block";
+      }
+    });
+  });
+let currentStep = 1;
+
+let logLines = [];
+let timestampMode = 'original';  // Modes: 'original', 'auto'
+
+let originalLogs = [];
+
+window.addEventListener('DOMContentLoaded', () => {
+  const table = document.getElementById("logTableBody");
+  const rows = table.getElementsByTagName("tr");
+
+  originalLogs = []; // Clear before storing
+
+  for (let row of rows) {
+    if (row.cells.length < 4) continue;
+
+    const datetime = row.cells[1].innerText;
+    const message = row.cells[3].innerText;
+
+    originalLogs.push({ time: datetime, message: message });
+  }
+});
+  function toggleAdvancedSettings() {
+    const adv = document.getElementById('advanced-settings');
+    adv.style.display = (adv.style.display === 'block') ? 'none' : 'block';
+  }
+ 
+
+// Get current timestamp in YYYY-MM-DD HH:mm:ss
+function getCurrentTimestamp() {
+  const now = new Date();
+  const pad = (n) => String(n).padStart(2, '0');
+  return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+}
+
+function setActiveButton(event) {
+  // Remove active class from all timestamp labels
+  document.querySelectorAll('#timestampModeGroup label').forEach(label => {
+    label.classList.remove('active', 'btn-primary');
+    label.classList.add('btn-outline-primary');
+  });
+
+  // Add active to clicked label
+  const clickedLabel = event.target;
+  clickedLabel.classList.remove('btn-outline-primary');
+  clickedLabel.classList.add('btn-primary', 'active');
+}
+
+
+function setTimestampModes(mode,event) {
+    if (event) event.preventDefault();
+    setActiveButton(event);
+    if (mode === 'auto') {
+      const table = document.getElementById("logTableBody");
+      const rows = table.getElementsByTagName("tr");
+      
+      for (let i = 0; i < rows.length; i++) {
+        if (rows[i].cells.length < 4 || !originalLogs[i]) continue;
+
+        rows[i].cells[1].innerText = originalLogs[i].time;
+        rows[i].cells[3].innerText = originalLogs[i].message;
+      }
+    }
+    console.log("Original logs:", originalLogs);
+  }
+
+
+// Change timestamp mode and re-render table
+function setTimestampMode(mode, event) {
+  if (event) event.preventDefault();
+  setActiveButton(event);
+  timestampMode = mode;
+
+  const advancedDiv = document.getElementById('advanced-timestamp-settings');
+
+  // Show/hide advanced settings only for "advanced" mode
+  if (mode === 'advanced') {
+    advancedDiv.style.display = 'block';
+  } else {
+    advancedDiv.style.display = 'none';
+  }
+
+  // Optional: you can also apply timestamp changes here
+  if (mode === 'current') {
+    applyCurrentTime();
+  } else if (mode === 'auto') {
+    restoreOriginalLogs();
+  }
+
+  renderLogTable();
+}
+
+
+function applyTimezoneToLogs() {
+  const selectedTimezone = document.getElementById("timezone").value;
+  const table = document.getElementById("logTableBody");
+  const rows = table.getElementsByTagName("tr");
+
+  for (let i = 0; i < rows.length; i++) {
+    if (!originalLogs[i]) continue;
+
+    const message = originalLogs[i].message;
+
+    // Get current datetime in selected timezone
+    const nowInTZ = moment().tz(selectedTimezone).format("YYYY-MM-DD HH:mm:ss");
+
+    // Update table row
+    rows[i].cells[1].innerText = nowInTZ;
+    rows[i].cells[3].innerText = `${nowInTZ} ${message.replace(/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\s*/, '')}`;
+  }
+}
+
+
+// Render the log table based on mode
+function renderLogTable() {
+  const tbody = document.getElementById("logTableBody");
+  tbody.innerHTML = "";
+
+  originalLogs = []; // Reset original logs each render
+
+  logLines.forEach((line, index) => {
+    if (!line.trim()) return;
+
+    line = line.trim().replace(/\s+/g, ' ');
+    const regex = /^(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}) (INFO|WARN|DEBUG|ERROR) (.+)$/;
+    const match = line.match(regex);
+
+    if (match) {
+      let [_, originalDatetime, level, message] = match;
+
+      // Store original timestamp and message for future use (timezone switching)
+      originalLogs.push({
+        time: originalDatetime,
+        message: message
+      });
+
+      // Determine which timestamp to show
+      let displayDatetime = timestampMode === 'auto' ? getCurrentTimestamp() : originalDatetime;
+
+      const row = `<tr>
+                    <td>${index + 1}</td>
+                    <td>${displayDatetime}</td>
+                    <td>${level}</td>
+                    <td>${message}</td>
+                  </tr>`;
+      tbody.insertAdjacentHTML('beforeend', row);
+    } else {
+      const row = `<tr>
+                    <td>${index + 1}</td>
+                    <td colspan="3">${line}</td>
+                  </tr>`;
+      tbody.insertAdjacentHTML('beforeend', row);
+    }
+  });
+}
+
+
+// Modified nextStep()
+function nextStep() {
+  if (currentStep === 1) {
+    const fileInput = document.getElementById("logFileInput");
+    const file = fileInput.files[0];
+
+    if (!file || !file.name.endsWith('.log')) {
+      alert("Please upload a valid .log file.");
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      logLines = e.target.result.split(/\r?\n/);
+      renderLogTable();  // Initial render with 'original'
+
+      // Send logs to backend
+      fetch('/store_temp_logs', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ logs: logLines })
+      }).then(res => {
+        if (!res.ok) {
+          alert('Failed to store logs in backend');
+        }
+      });
+    };
+    reader.readAsText(file);
+
+    // Move to next step UI
+    document.getElementById("step-1").style.display = "none";
+    document.getElementById("step-2").style.display = "block";
+    document.getElementById("progress-step-1").classList.remove("active");
+    document.getElementById("progress-step-2").classList.add("active");
+    currentStep = 2;
+  }
+}
+
+
+
+function prevStep() {
+  document.getElementById("step-1").style.display = "block";
+  document.getElementById("step-2").style.display = "none";
+  document.getElementById("progress-step-1").classList.add("active");
+  document.getElementById("progress-step-2").classList.remove("active");
+  currentStep = 1;
+}
+
+function applyCurrentTime(event) {
+  if (event) event.preventDefault();
+  setActiveButton(event);
+  const now = new Date();
+
+  // Format to IST using local time
+  const formattedIST = now.toLocaleString('en-GB', {
+    timeZone: 'Asia/Kolkata',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false
+  }).replace(',', '');
+
+  // Convert to format: YYYY-MM-DD HH:mm:ss
+  const [datePart, timePart] = formattedIST.split(' ');
+  const [day, month, year] = datePart.split('/');
+  const finalTime = `${year}-${month}-${day} ${timePart}`;
+
+  const table = document.getElementById("logTableBody");
+  const rows = table.getElementsByTagName("tr");
+
+  for (let row of rows) {
+    if (row.cells.length < 4) continue;
+
+    const datetimeCell = row.cells[1];
+    const messageCell = row.cells[3];
+
+    // Set new timestamp
+    datetimeCell.innerText = finalTime;
+
+    const originalMessage = messageCell.innerText.replace(
+      /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\s*/,
+      ''
+    );
+    messageCell.innerText = `${finalTime} ${originalMessage}`;
+  }
+}
+
+const toggleHeader = document.querySelector('[data-bs-toggle="collapse"]');
+const toggleArrow = document.getElementById("toggleArrow");
+const collapseTarget = document.getElementById("timestampSettings");
+
+collapseTarget.addEventListener("show.bs.collapse", () => {
+  toggleArrow.innerHTML = "&#9660;"; // ▼
+});
+
+collapseTarget.addEventListener("hide.bs.collapse", () => {
+  toggleArrow.innerHTML = "&#9654;"; // ▶
+});
+
+function toggleAdvancedSection(header) {
+    header.classList.toggle("open");
+    const body = header.nextElementSibling;
+    body.style.display = body.style.display === "none" ? "block" : "none";
+  }
+
+  function removeSetting(button) {
+    const row = button.closest(".advanced-row");
+    row.remove();
+  }
+
+  function addNewSetting() {
+    const container = document.getElementById("advancedConfigList");
+    const newRow = document.createElement("div");
+    newRow.className = "advanced-row";
+    newRow.innerHTML = `
+      <input type="text" class="form-control" placeholder="Name">
+      <input type="text" class="form-control" placeholder="Value">
+      <button class="remove-setting" onclick="removeSetting(this)">×</button>
+    `;
+    container.insertBefore(newRow, container.querySelector('.new-setting-link'));
+  }
+
+function copyToClipboard1() {
+    const rows = document.querySelectorAll("#advancedConfigList .advanced-row");
+    let textToCopy = "";
+    rows.forEach(row => {
+      const inputs = row.querySelectorAll("input, select");
+      const name = inputs[0]?.value || "";
+      const value = inputs[1]?.value || "";
+      if (name) {
+        textToCopy += `${name}=${value}\n`;
+      }
+    });
+
+    navigator.clipboard.writeText(textToCopy.trim()).then(() => {
+      alert("Settings copied to clipboard!");
+    }).catch(err => {
+      alert("Failed to copy!");
+    });
+  }
+
+  function applyAdvancedSettings() {
+  const rows = document.querySelectorAll("#advancedConfigList .advanced-row");
+
+  let settings = {};
+  rows.forEach(row => {
+    const keyInput = row.querySelector("input:first-child");
+    const valueInput = row.querySelectorAll("input, select")[1];
+    const key = keyInput.value.trim();
+    const value = valueInput.value.trim();
+    settings[key] = value;
+  });
+
+  console.log("⚙️ Advanced settings applied:", settings);
+
+  // Apply logic to logs
+  let updatedLogs = [...logLines];
+
+  // Line breaker logic (only if SHOULD_LINEMERGE is false and LINE_BREAKER is set)
+  if (settings["SHOULD_LINEMERGE"]?.toLowerCase() === "false" && settings["LINE_BREAKER"]) {
+    try {
+      const breakerRegex = new RegExp(settings["LINE_BREAKER"]);
+      updatedLogs = updatedLogs.flatMap(line => line.split(breakerRegex).filter(Boolean));
+    } catch (e) {
+      console.error("Invalid LINE_BREAKER regex:", e);
+      alert("Invalid LINE_BREAKER pattern!");
+      return;
+    }
+  }
+
+  // TODO: You can later add handling of DATETIME_CONFIG or NO_BINARY_CHECK if required
+
+  // Replace global logLines and render
+  logLines = updatedLogs;
+  renderLogTable();
+
+  // Send to backend
+  fetch('/store_temp_logs', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ logs: logLines })
+  }).then(res => {
+    if (!res.ok) {
+      alert("❌ Failed to store updated logs in backend");
+    }
+  });
+}
+
+
+</script>
+
+<script>
+  // Toggle advanced settings display (assuming you have this)
+  function toggleAdvancedSettings() {
+    const adv = document.getElementById('advanced-settings');
+    adv.style.display = (adv.style.display === 'none' || adv.style.display === '') ? 'block' : 'none';
+  }
+
+  // Parse button manual submission with AJAX
+  document.getElementById('parseBtn').addEventListener('click', function () {
+    const form = document.getElementById('propsForm');
+    const formData = new FormData(form);
+
+    fetch(window.location.href, {
+      method: 'POST',
+      body: formData,
+    })
+      .then(response => response.text())
+      .then(html => {
+        // Parse returned HTML and replace only the content section
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        const newContent = doc.querySelector('section.content');
+
+        if (newContent) {
+          document.querySelector('section.content').innerHTML = newContent.innerHTML;
+        } else {
+          console.error('Updated content section not found in response.');
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('Failed to parse. Check console for details.');
+      });
+  });
+
+  // Optional: your removeNameValuePair() and addNameValuePair() functions if needed here
+</script>
+
+<script>
+  function toggleAdvancedSettings() {
+    const adv = document.getElementById('advanced-settings');
+    adv.style.display = (adv.style.display === 'block') ? 'none' : 'block';
+  }
+ 
+  function addNameValuePair() {
+    const container = document.getElementById('name-value-container');
+    const idx = container.children.length;
+    const div = document.createElement('div');
+    div.className = 'name-value-pair';
+    div.innerHTML = `
+      <input type="text" name="name_${idx}" placeholder="Name" class="name-input" required>
+      <input type="text" name="value_${idx}" placeholder="Value" class="value-input">
+      <span class="remove-pair" onclick="removeNameValuePair(this)" title="Remove pair">×</span>
+    `;
+    container.appendChild(div);
+  }
+ 
+  function removeNameValuePair(el) {
+    el.parentElement.remove();
+  }
+ 
+  function copyToClipboard() {
+    let text = "";
+    const pairs = document.querySelectorAll(".name-value-pair");
+    pairs.forEach(pair => {
+      const nameInput = pair.querySelector("input[name^='name_']");
+      const valueInput = pair.querySelector("input[name^='value_'], select[name^='value_']");
+      const name = nameInput ? nameInput.value.trim() : "";
+      const value = valueInput ? valueInput.value.trim() : "";
+      if (name && value) {
+        text += `${name}=${value}\n`;
+      }
+    });
+    if (text) {
+      navigator.clipboard.writeText(text).then(() => {
+        alert("Copied to clipboard!");
+      }).catch(err => {
+        alert("Failed to copy: " + err);
+      });
+    } else {
+      alert("No name-value pairs to copy.");
+    }
+  }
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

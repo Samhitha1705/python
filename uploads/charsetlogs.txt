@@ -1,0 +1,10 @@
+2025-06-16 09:00:00 INFO Email sent with header Content-Type: text/plain; charset=UTF-8 from user emp001
+2025-06-16 09:05:00 INFO Email sent with header Content-Type: text/html; charset=ISO-8859-1 from user emp002
+2025-06-16 09:10:00 DEBUG HTTP Response headers: Content-Type: application/json; charset=UTF-16
+2025-06-16 09:15:00 WARN File upload received with charset=WINDOWS-1252 from client 192.168.1.10
+2025-06-16 09:20:00 INFO Message body charset=SHIFT_JIS detected in system logs
+2025-06-16 09:25:00 INFO Webpage response Content-Type: text/html; charset=GB2312 returned by server
+2025-06-16 09:30:00 ERROR Unsupported charset=EUC-KR found in user request headers
+2025-06-16 09:35:00 INFO Data export file uses charset=ISO-2022-JP format
+2025-06-16 09:40:00 DEBUG Charset KOI8-R specified for legacy system integration
+2025-06-16 09:45:00 INFO Email processed with Content-Type: text/plain; charset=US-ASCII

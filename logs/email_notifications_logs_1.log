@@ -1,0 +1,10 @@
+INFO User 'emp001' sent email to 'manager@company.com' at 09:00 AM
+INFO User 'emp002' sent email to 'client@company.com' at 09:30 AM
+ERROR User 'emp003' failed to send email to 'admin@company.com' at 10:00 AM
+INFO User 'emp004' received email from 'team@company.com' at 10:30 AM
+INFO User 'emp005' sent email to 'client@company.com' at 11:00 AM
+INFO User 'emp006' received email from 'manager@company.com' at 11:30 AM
+INFO User 'emp007' sent email to 'hr@company.com' at 12:00 PM
+INFO User 'emp008' received email from 'support@company.com' at 12:30 PM
+ERROR User 'emp009' failed to send email to 'client@company.com' at 01:00 PM
+INFO User 'emp010' received email from 'hr@company.com' at 01:30 PM

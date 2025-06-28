@@ -1,0 +1,5 @@
+2025-06-26T09:35:02Z Action: SELECT
+2025-06-26T09:35:02Z DatabaseName: todo_db
+2025-06-26T09:35:02Z PrincipalName: admin_user
+2025-06-26T09:35:02Z Statement: SELECT * FROM Tasks WHERE status='pending'
+2025-06-26T09:35:02Z Succeeded: True

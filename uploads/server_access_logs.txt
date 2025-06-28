@@ -1,0 +1,10 @@
+INFO User 'emp001' accessed server at 08:00 AM
+ERROR User 'emp002' failed to access server at 08:30 AM
+INFO User 'emp003' accessed server at 09:00 AM
+INFO User 'emp004' accessed server at 09:30 AM
+ERROR User 'emp005' failed to access server at 10:00 AM
+INFO User 'emp006' accessed server at 10:30 AM
+INFO User 'emp007' accessed server at 11:00 AM
+INFO User 'emp008' accessed server at 11:30 AM
+INFO User 'emp009' accessed server at 12:00 PM
+ERROR User 'emp010' failed to access server at 12:30 PM

@@ -1,0 +1,7 @@
+2025-06-26T08:32:45.123Z Time: 2025-06-26T07:54:11.883Z  
+2025-06-26T08:32:45.123Z OperationName: Microsoft.Compute/virtualMachines/start/action  
+2025-06-26T08:32:45.123Z Status: Succeeded  
+2025-06-26T08:32:45.123Z Caller: vedasamhitha@domain.com  
+2025-06-26T08:32:45.123Z ResourceGroup: test-rg  
+2025-06-26T08:32:45.123Z Resource: vm-dev-eastus  
+2025-06-26T08:32:45.123Z Location: East US  

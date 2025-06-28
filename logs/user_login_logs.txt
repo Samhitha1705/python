@@ -1,0 +1,10 @@
+INFO User 'emp001' logged in at 08:00 AM
+INFO User 'emp002' logged in at 08:15 AM
+INFO User 'emp003' logged in at 08:30 AM
+INFO User 'emp004' logged in at 08:45 AM
+ERROR User 'emp005' failed login attempt at 09:00 AM
+INFO User 'emp006' logged in at 09:15 AM
+INFO User 'emp007' logged in at 09:30 AM
+ERROR User 'emp008' failed login attempt at 09:45 AM
+INFO User 'emp009' logged in at 10:00 AM
+INFO User 'emp010' logged in at 10:15 AM

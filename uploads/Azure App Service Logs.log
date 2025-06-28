@@ -1,0 +1,5 @@
+2025-06-26T08:32:45.123Z Level: Information  
+2025-06-26T08:32:45.123Z AppName: my-flask-app  
+2025-06-26T08:32:45.123Z Message: HTTP GET /api/todos responded 200 in 48ms  
+2025-06-26T08:32:45.123Z ClientIP: 20.42.85.133  
+2025-06-26T08:32:45.123Z InstanceId: f38e7e9b3c1f4e36a4c67c837f3ac6e7

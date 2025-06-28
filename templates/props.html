@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Props Generator</title>
+<style>
+  /* Google Fonts Import */
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+ 
+  /* Reset some default browser styles */
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+      Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    background: #f9fafb;
+    color: #2c3e50;
+    margin: 0;
+    padding: 0;
+  }
+ 
+ 
+  .header {
+    background: linear-gradient(90deg, #4caf50 0%, #3a944d 100%);
+    color: white;
+    padding: 28px 20px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 1.8rem;
+    letter-spacing: 0.04em;
+    box-shadow: 0 3px 8px rgb(72 180 97 / 0.4);
+  }
+  .main {
+    display: flex;
+    gap: 24px;
+    padding: 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .sidebar {
+    flex: 0 0 320px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgb(0 0 0 / 0.07);
+    padding: 24px 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .sidebar form > label {
+    font-weight: 600;
+    margin-top: 10px;
+    display: block;
+    color: #34495e;
+  }
+  .sidebar input[type="file"],
+  .sidebar input[type="text"],
+  .sidebar select,
+  .sidebar button,
+  .sidebar input[type="number"] {
+    width: 100%;
+    padding: 12px 14px;
+    margin-top: 6px;
+    border: 1.8px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.25s ease;
+    outline-offset: 2px;
+  }
+  .sidebar input[type="file"] {
+    padding: 6px 10px;
+  }
+  .sidebar input[type="text"]:focus,
+  .sidebar select:focus,
+  .sidebar input[type="number"]:focus {
+    border-color: #4caf50;
+    box-shadow: 0 0 8px rgb(76 175 80 / 0.4);
+  }
+  .sidebar button {
+    background: #4caf50;
+    border: none;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 16px;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    padding: 14px 0;
+    box-shadow: 0 4px 12px rgb(76 175 80 / 0.4);
+    user-select: none;
+    transition: background-color 0.3s ease;
+  }
+  .sidebar button:hover {
+    background-color: #3a944d;
+    box-shadow: 0 6px 16px rgb(58 148 77 / 0.6);
+  }
+  .sidebar button[type="button"] {
+    background: #e0e7ff;
+    color: #3730a3;
+    font-weight: 600;
+    box-shadow: none;
+    margin-top: 0;
+  }
+  .sidebar button[type="button"]:hover {
+    background: #c7d2fe;
+  }
+  small {
+    font-size: 12px;
+    color: #64748b;
+    margin-top: 4px;
+    display: block;
+  }
+  code {
+    background: #f3f4f6;
+    padding: 2px 5px;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+  }
+ 
+  /* Radio Button Styling */
+  .sidebar label input[type="radio"] {
+    margin-right: 10px;
+    cursor: pointer;
+  }
+  .sidebar label {
+    cursor: pointer;
+    font-weight: 500;
+    color: #374151;
+  }
+ 
+  /* Advanced Settings */
+  #advanced-settings {
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1.5px solid #e5e7eb;
+  }
+  .name-value-pair {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+  .name-value-pair input[type="text"],
+  .name-value-pair select {
+    flex: 1;
+    padding: 10px 12px;
+    border-radius: 6px;
+    border: 1.5px solid #cbd5e1;
+    font-size: 0.95rem;
+    transition: border-color 0.3s ease;
+  }
+  .name-value-pair input[type="text"]:focus,
+  .name-value-pair select:focus {
+    border-color: #4caf50;
+    box-shadow: 0 0 7px rgb(76 175 80 / 0.3);
+    outline: none;
+  }
+  .remove-pair {
+    font-size: 20px;
+    color: #e53e3e;
+    cursor: pointer;
+    user-select: none;
+    font-weight: 700;
+    transition: color 0.2s ease;
+  }
+  .remove-pair:hover {
+    color: #9b2c2c;
+  }
+ 
+  /* Content area */
+  .content {
+    flex: 1;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgb(0 0 0 / 0.06);
+    padding: 28px 32px;
+    overflow-x: auto;
+  }
+  .content h2 {
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 24px;
+    font-size: 1.6rem;
+    border-bottom: 2px solid #4caf50;
+    padding-bottom: 8px;
+  }
+  textarea {
+    width: 100%;
+    height: 320px;
+    padding: 16px;
+    border-radius: 10px;
+    border: 1.5px solid #d1d5db;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    color: #1e293b;
+    background: #f9fafb;
+    resize: vertical;
+    transition: border-color 0.3s ease;
+  }
+  textarea:focus {
+    border-color: #4caf50;
+    box-shadow: 0 0 10px rgb(76 175 80 / 0.4);
+    outline: none;
+  }
+ 
+  /* Table Styling */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 8px;
+    font-size: 0.95rem;
+    color: #374151;
+    box-shadow: 0 3px 10px rgb(0 0 0 / 0.05);
+  }
+  th, td {
+    padding: 12px 14px;
+    border-bottom: 1px solid #e5e7eb;
+    text-align: left;
+  }
+  th {
+    background-color: #e8f5e9;
+    color: #276749;
+    font-weight: 700;
+    border-bottom: 2px solid #4caf50;
+  }
+  tr:hover {
+    background-color: #f0fff4;
+  }
+ 
+  /* Responsive for smaller screens */
+  @media (max-width: 900px) {
+    .main {
+      flex-direction: column;
+      padding: 16px;
+    }
+    .sidebar {
+      width: 100%;
+      margin-bottom: 20px;
+    }
+    .content {
+      width: 100%;
+    }
+  }
+</style>
+ 
+<script>
+  function toggleAdvancedSettings() {
+    const adv = document.getElementById('advanced-settings');
+    adv.style.display = (adv.style.display === 'block') ? 'none' : 'block';
+  }
+ 
+  function addNameValuePair() {
+    const container = document.getElementById('name-value-container');
+    const idx = container.children.length;
+    const div = document.createElement('div');
+    div.className = 'name-value-pair';
+    div.innerHTML = `
+      <input type="text" name="name_${idx}" placeholder="Name" class="name-input" required>
+      <input type="text" name="value_${idx}" placeholder="Value" class="value-input">
+      <span class="remove-pair" onclick="removeNameValuePair(this)" title="Remove pair">×</span>
+    `;
+    container.appendChild(div);
+  }
+ 
+  function removeNameValuePair(el) {
+    el.parentElement.remove();
+  }
+ 
+  function copyToClipboard() {
+    let text = "";
+    const pairs = document.querySelectorAll(".name-value-pair");
+    pairs.forEach(pair => {
+      const nameInput = pair.querySelector("input[name^='name_']");
+      const valueInput = pair.querySelector("input[name^='value_'], select[name^='value_']");
+      const name = nameInput ? nameInput.value.trim() : "";
+      const value = valueInput ? valueInput.value.trim() : "";
+      if (name && value) {
+        text += `${name}=${value}\n`;
+      }
+    });
+    if (text) {
+      navigator.clipboard.writeText(text).then(() => {
+        alert("Copied to clipboard!");
+      }).catch(err => {
+        alert("Failed to copy: " + err);
+      });
+    } else {
+      alert("No name-value pairs to copy.");
+    }
+  }
+</script>
+</head>
+<body>
+  <div class="header">
+    Props Generator
+  </div>
+ 
+<!-- Add this inside your body, maybe right after the form or sidebar -->
+<div id="copy-panel" style="display:none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; border: 1.5px solid #4caf50; border-radius: 10px; padding: 16px; width: 320px; box-shadow: 0 4px 14px rgba(76,175,80,0.3); font-family: monospace; z-index: 1000;"
+>
+  <h3 style="margin-top:0; font-weight: 600; color: #276749;">Props Configuration</h3>
+  <textarea id="copy-textarea" rows="8" style="width: 100%; padding: 10px; font-size: 0.9rem;
+    border: 1px solid #cbd5e1; border-radius: 6px; resize: vertical;"></textarea>
+  <div style="margin-top: 12px; text-align: right;">
+    <button id="copy-confirm" style="background:#4caf50; border:none; color:white; padding:8px 14px;
+      border-radius:6px; cursor:pointer; margin-right: 8px;">Copy</button>
+    <button id="copy-cancel" style="background:#f3f4f6; border:none; color:#374151; padding:8px 14px;
+      border-radius:6px; cursor:pointer;">Cancel</button>
+  </div>
+  <div id="copy-status" style="margin-top:8px; color:#276749; font-weight: 600; display:none;">Copied!</div>
+</div>
+ 
+  <div class="main">
+    <aside class="sidebar">
+      <form method="POST" enctype="multipart/form-data" novalidate>
+        <label for="file"><strong>Upload Log File</strong></label>
+        <input type="file" id="file" name="file" accept=".log,.txt" onchange="this.form.submit()">
+ 
+        <label><strong>Event Policy</strong></label>
+        <label><input type="radio" name="event_policy" value="auto" {{ 'checked' if event_policy=='auto' else '' }} onchange="this.form.submit()"> Auto</label>
+        <label><input type="radio" name="event_policy" value="every_line" {{ 'checked' if event_policy=='every_line' else '' }} onchange="this.form.submit()"> Every Line</label>
+        <label><input type="radio" name="event_policy" value="regex" {{ 'checked' if event_policy=='regex' else '' }} onchange="this.form.submit()"> Regex</label>
+ 
+        {% if event_policy == 'regex' %}
+        <label for="regex_pattern">Regex Pattern</label>
+        <input type="text" id="regex_pattern" name="regex_pattern" value="{{ regex_pattern }}" placeholder="Enter regex pattern" onchange="this.form.submit()">
+        {% endif %}
+ 
+        <label><strong>Timestamp Extraction</strong></label>
+        <label><input type="radio" name="timestamp_policy" value="auto" {{ 'checked' if timestamp_policy=='auto' else '' }} onchange="this.form.submit()"> Auto</label>
+        <label><input type="radio" name="timestamp_policy" value="current_time" {{ 'checked' if timestamp_policy=='current_time' else '' }} onchange="this.form.submit()"> Current Time</label>
+        <label><input type="radio" name="timestamp_policy" value="advanced" {{ 'checked' if timestamp_policy=='advanced' else '' }} onchange="this.form.submit()"> Advanced</label>
+ 
+        {% if timestamp_policy == 'advanced' %}
+        <label for="timezone_select"><strong>Time Zone</strong></label>
+        <select name="timezone_select" id="timezone_select">
+          {% for tz_val, tz_desc in timezone_options %}
+          <option value="{{ tz_val }}" {{ 'selected' if tz_val == selected_timezone else '' }}>{{ tz_desc }}</option>
+          {% endfor %}
+        </select>
+ 
+        <label for="timestamp_format"><strong>Timestamp Format</strong></label>
+        <input type="text" id="timestamp_format" name="timestamp_format" placeholder="e.g. %Y-%m-%d %H:%M:%S" value="{{ timestamp_format or '' }}">
+        <small>A string in <code>strptime()</code> format that helps Splunk recognize timestamps. <a href="https://docs.python.org/3/library/datetime.html#strftime-and-strptime-format-codes" target="_blank" rel="noopener">Learn More</a></small>
+ 
+        <label for="timestamp_prefix"><strong>Timestamp Prefix</strong></label>
+        <input type="text" id="timestamp_prefix" name="timestamp_prefix" placeholder="Regex pattern e.g. \\d+abc123\\d{2,4}" value="{{ timestamp_prefix or '' }}">
+        <small>Timestamp is always prefaced by this regex pattern.</small>
+ 
+        <label for="lookahead"><strong>Lookahead</strong></label>
+        <input type="number" id="lookahead" name="lookahead" min="0" placeholder="128" value="{{ lookahead or 128 }}">
+        <small>Timestamp never extends more than this number of characters into the event, or past the Regex if specified above.</small>
+ 
+        <button type="submit">Update Timestamp Settings</button>
+        {% endif %}
+ 
+        <div style="margin-top:15px;">
+          <button type="button" onclick="toggleAdvancedSettings()">⚙️ Advanced Settings</button>
+        </div>
+ 
+        <!-- Advanced Name-Value Pairs -->
+        <div id="advanced-settings" style="display:none; margin-top: 15px;">
+          <h3 style="color:#4caf50; font-weight: 700;">Advanced Name-Value Pairs</h3>
+          <div id="name-value-container">
+            {% for idx, pair in enumerate(name_value_pairs) %}
+              {% if timestamp_policy == 'advanced' %}
+                <div class="name-value-pair">
+                  <input type="text" name="name_{{ idx }}" value="{{ pair[0] }}" class="name-input" required>
+                  {% if pair[0] == "CHARSET" %}
+                  <select name="value_{{ idx }}">
+                    {% for cset in charset_options %}
+                    <option value="{{ cset }}" {{ 'selected' if cset==pair[1] else '' }}>{{ cset }}</option>
+                    {% endfor %}
+                  </select>
+                  {% else %}
+                  <input type="text" name="value_{{ idx }}" value="{{ pair[1] }}" class="value-input">
+                  {% endif %}
+                  <span class="remove-pair" onclick="removeNameValuePair(this)" title="Remove pair">×</span>
+                </div>
+              {% else %}
+                {% if pair[0] not in ['TIME_FORMAT', 'TIME_PREFIX', 'MAX_TIMESTAMP_LOOKAHEAD', 'TIMEZONE'] %}
+                  <div class="name-value-pair">
+                    <input type="text" name="name_{{ idx }}" value="{{ pair[0] }}" class="name-input" required>
+                    {% if pair[0] == "CHARSET" %}
+                    <select name="value_{{ idx }}">
+                      {% for cset in charset_options %}
+                      <option value="{{ cset }}" {{ 'selected' if cset==pair[1] else '' }}>{{ cset }}</option>
+                      {% endfor %}
+                    </select>
+                    {% else %}
+                    <input type="text" name="value_{{ idx }}" value="{{ pair[1] }}" class="value-input">
+                    {% endif %}
+                    <span class="remove-pair" onclick="removeNameValuePair(this)" title="Remove pair">×</span>
+                  </div>
+                {% endif %}
+              {% endif %}
+            {% endfor %}
+          </div>
+          <button type="button" onclick="addNameValuePair()">Add Pair</button>
+          <!-- <button type="button" onclick="copyToClipboard()">Copy to Clipboard</button> -->
+                    <button type="button" onclick="showCopyPanel()">Copy to Clipboard</button>
+        </div>
+ 
+        <button type="submit" name="apply_settings" value="1" style="margin-top:24px;">
+          Download Config
+        </button>
+      </form>
+    </aside>
+ 
+    <!-- <section class="content">
+      <h2>{{ uploaded_filename or "No file uploaded" }}</h2>
+ 
+      {% if event_policy == 'auto' %}
+      <textarea readonly>{{ combined_log }}</textarea>
+      {% else %}
+      <table>
+        <thead>
+          <tr>
+            <th>Timestamp</th>
+            <th>Log Line</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in table_data %}
+          <tr>
+            <td>{{ row.datetime }}</td>
+            <td>{{ row.log }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% endif %}
+    </section> -->
+ 
+ 
+ 
+    <section class="content">
+  <h2>{{ uploaded_filename or "No file uploaded" }}</h2>
+ 
+  {% if not uploaded_filename %}
+  <!-- Show SVG and message if no file uploaded -->
+  <div style="text-align:center; padding: 40px 20px; color: #6b7280;">
+    <!-- Example simple SVG icon -->
+    <svg width="150" height="150" viewBox="0 0 24 24" fill="none" stroke="#4caf50" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 16px;">
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+      <polyline points="7 10 12 15 17 10" />
+      <line x1="12" y1="15" x2="12" y2="3" />
+    </svg>
+    <p style="font-size: 1.2rem;">No log file uploaded yet. Please upload a file to get started.</p>
+  </div>
+ 
+  {% elif event_policy == 'auto' %}
+  <textarea readonly>{{ combined_log }}</textarea>
+ 
+  {% else %}
+  <table>
+    <thead>
+      <tr>
+        <th>Timestamp</th>
+        <th>Log Line</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in table_data %}
+      <tr>
+        <td>{{ row.datetime }}</td>
+        <td>{{ row.log }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% endif %}
+</section>
+ 
+  </div>
+</body>
+<script>
+  const copyPanel = document.getElementById('copy-panel');
+  const copyTextarea = document.getElementById('copy-textarea');
+  const copyStatus = document.getElementById('copy-status');
+  const copyConfirm = document.getElementById('copy-confirm');
+  const copyCancel = document.getElementById('copy-cancel');
+ 
+  // Show the copy panel with the current name-value pairs text
+  function showCopyPanel() {
+    let text = "";
+    const pairs = document.querySelectorAll(".name-value-pair");
+    pairs.forEach(pair => {
+      const nameInput = pair.querySelector("input[name^='name_']");
+      const valueInput = pair.querySelector("input[name^='value_'], select[name^='value_']");
+      const name = nameInput ? nameInput.value.trim() : "";
+      const value = valueInput ? valueInput.value.trim() : "";
+      if (name && value) {
+        text += `${name}=${value}\n`;
+      }
+    });
+    if (!text) {
+      alert("No name-value pairs to copy.");
+      return;
+    }
+    copyTextarea.value = text.trim();
+    copyStatus.style.display = 'none';
+    copyPanel.style.display = 'block';
+  }
+ 
+  // Copy the textarea content and show success
+  copyConfirm.addEventListener('click', () => {
+    navigator.clipboard.writeText(copyTextarea.value).then(() => {
+      copyStatus.style.display = 'block';
+      // Optionally disable the copy button after success
+      copyConfirm.disabled = true;
+      setTimeout(() => {
+        copyStatus.style.display = 'none';
+        copyPanel.style.display = 'none';
+        copyConfirm.disabled = false;
+      }, 2000);
+    }).catch(err => {
+      alert("Failed to copy: " + err);
+    });
+  });
+ 
+  // Cancel hides the panel
+  copyCancel.addEventListener('click', () => {
+    copyPanel.style.display = 'none';
+  });
+</script>
+ 
+</html>
+ 
+ 
+ 

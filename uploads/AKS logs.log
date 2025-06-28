@@ -1,0 +1,4 @@
+2025-06-26T14:32:00Z Namespace: todo-app
+2025-06-26T14:32:00Z Pod: todo-api-76c7686b4f-92ptj
+2025-06-26T14:32:00Z Container: todo-api
+2025-06-26T14:32:00Z Log: Connected to database successfully

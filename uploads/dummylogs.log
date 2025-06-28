@@ -1,0 +1,2 @@
+2025-06-26T08:32:45.123Z INFO my-flask-app HTTP GET /api/todos responded 200 in 48ms
+2025-06-26T08:32:47.789Z ERROR my-flask-app Failed to connect to database
